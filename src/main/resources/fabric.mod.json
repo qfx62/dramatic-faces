@@ -1,0 +1,36 @@
+{
+	"schemaVersion": 1,
+	"id": "dramaticfaces",
+	"version": "${version}",
+	"name": "Dramatic Faces",
+	"description": "Players' heads come alive when they talk in Simple Voice Chat: a moving mouth, head motion and emotions like shouting, laughing, whispering and panic.",
+	"authors": [
+		"qfxdev"
+	],
+	"contact": {
+		"homepage": "https://modrinth.com/mod/dramatic-faces"
+	},
+	"license": "LicenseRef-All-Rights-Reserved",
+	"icon": "assets/dramaticfaces/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"voicechat": [
+			"dev.dramaticfaces.FacesVoicePlugin"
+		],
+		"modmenu": [
+			"dev.dramaticfaces.FacesModMenu"
+		]
+	},
+	"mixins": [
+		"dramaticfaces.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.20.1",
+		"minecraft": "~26.3",
+		"java": ">=25",
+		"voicechat": "*"
+	},
+	"suggests": {
+		"modmenu": "*"
+	}
+}

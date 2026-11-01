@@ -1,0 +1,13 @@
+{
+	"required": true,
+	"package": "dev.dramaticfaces.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"AvatarRendererMixin",
+		"LivingEntityRendererInvoker",
+		"PlayerModelMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

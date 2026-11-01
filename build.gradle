@@ -1,0 +1,68 @@
+plugins {
+	id 'net.fabricmc.fabric-loom' version "${loom_version}"
+}
+
+repositories {
+	maven {
+		name = 'Henkelmax'
+		url = 'https://maven.maxhenkel.de/repository/public'
+	}
+	maven {
+		name = 'Modrinth'
+		url = 'https://api.modrinth.com/maven'
+	}
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+	compileOnly "de.maxhenkel.voicechat:voicechat-api:${project.voicechat_api_version}"
+	compileOnly "maven.modrinth:modmenu:${project.modmenu_version}"
+
+	// Only for the dev game started with runClient, never inside our jar.
+	localRuntime "maven.modrinth:simple-voice-chat:${project.voicechat_version}"
+	localRuntime "maven.modrinth:modmenu:${project.modmenu_version}"
+	localRuntime "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+}
+
+// Hot reload: the dev game runs on the JetBrains Runtime with our small reload agent
+// (tools/reload-agent), which swaps recompiled classes into the running game.
+// Both live in ~/.qfx-tools; without them runClient still works, just without hot reload.
+def tools = "${System.getProperty('user.home')}/.qfx-tools"
+def reloadAgent = file("${tools}/qfx-reload-agent.jar")
+
+loom {
+	runs {
+		client {
+			if (reloadAgent.exists()) {
+				vmArgs "-XX:+AllowEnhancedClassRedefinition",
+						"-javaagent:${reloadAgent.absolutePath}=${layout.buildDirectory.dir('classes/java/main').get().asFile.absolutePath}"
+			}
+		}
+	}
+}
+
+processResources {
+	def version = project.version
+	inputs.property "version", version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": version
+	}
+}
+
+jar {
+	from("LICENSE") {
+		rename { "LICENSE_${project.base.archivesName.get()}" }
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 25
+}
+
+java {
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
+}
